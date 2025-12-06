@@ -23,6 +23,9 @@ NOTES:
 - All API routes and automation schedulers are active once the server is running.
 - The scheduler will collect data and save it into **home/cron/** at 08.00, 12.00, and 15.00 WIB.
 - File stored in **home/cron/** for more than one month will be deleted automatically at 00.00 WIB everyday.
+- The answer for question 3 (Data Processing) can be found in **SQL_query.md**.
 
 ## 3. Run the Frontend
 Open the file **frontend/form.html** in your browser. You can submit data throught the form and display the saved data in table format.
+
+
