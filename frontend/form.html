@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Form Input</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .container {
+      width: 380px;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      margin-top: 10px;
+      display: block;
+      font-weight: bold;
+    }
+
+    input {
+      width: 94%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background: #4a90e2;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #357abd;
+    }
+
+    .data-box {
+      margin-top: 25px;
+      background: #f0f3f7;
+      padding: 15px;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background: #4a90e2;
+        color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Form Input Data</h2>
+
+  <label>Name</label>
+  <input id="name" type="text" placeholder="Enter name" />
+
+  <label>Position</label>
+  <input id="position" type="text" placeholder="Enter position" />
+
+  <label>Salary</label>
+  <input id="salary" type="number" placeholder="Enter salary" />
+
+  <button onclick="sendData()">Submit</button>
+  <button style="background:#27ae60" onclick="loadData()">Load Saved Data</button>
+
+  <div id="result" class="data-box"></div>
+</div>
+
+<script>
+  const API_URL = "http://localhost:3000";
+
+  async function sendData() {
+    const data = {
+      name: document.getElementById("name").value,
+      position: document.getElementById("position").value,
+      salary: document.getElementById("salary").value
+    };
+
+    const res = await fetch(API_URL + "/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const json = await res.json();
+    alert(json.message);
+  }
+
+  async function loadData() {
+    const res = await fetch(API_URL + "/");
+    const json = await res.json();
+    const data = json.data;
+
+    if (!data || data.length === 0) {
+        document.getElementById("result").innerHTML = "<p>No data found.</p>";
+        return;
+    }
+
+    let table = `
+        <table>
+        <thead>
+            <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.forEach(item => {
+        table += `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.position}</td>
+            <td>${item.salary}</td>
+        </tr>
+        `;
+    });
+
+    table += `
+        </tbody>
+        </table>
+    `;
+
+    document.getElementById("result").innerHTML = table;
+    }
+</script>
+
+</body>
+</html>
